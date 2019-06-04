@@ -4,7 +4,7 @@ Method::Delegation - Easily delegate methods to another object
 
 # VERSION
 
-Version 0.02
+Version 0.03
 
 # SYNOPSIS
 
@@ -31,6 +31,12 @@ Arguments to `delegate` are as follows (examples will be after):
     This is the name of the method that, when called, returns the object we
     delegate to.  It is assumed that it will _always_ return an object, unless
     the _if\_true_ argument is also supplied.
+
+- `maybe_to` (optional)
+
+    If the object you wish to delegate to might not exist, you can use `maybe_to`
+    instead. This is a shorthand for using both `to` and `if_true`. Do not
+    provide `to` and `if_true` if you also provide `maybe_to`.
 
 - `methods`
 
@@ -147,14 +153,12 @@ that:
         return;
     }
 
-As an optimization for the common case, if you supply the number (or string)
-"1" as the argument to `if_true`, it will be replaced with the name of the
-delegate method (the `to` method):
+As an optimization for the common case, you can use `maybe_to` if the object
+you're delegating to might not exist.
 
     delegate(
-        methods => 'current_ship',
-        to      => 'character_ship',
-        if_true => 1,
+        methods  => 'current_ship',
+        maybe_to => 'character_ship',
     );
 
 Note: the `if_true` attribute doesn't need to point to the same method, but

@@ -6,38 +6,47 @@ use warnings;
 use Carp;
 use Sub::Install;
 use base 'Exporter';
-our @EXPORT = qw(delegate);    ## no critic
-our $VERSION = '0.02';
+our @EXPORT  = qw(delegate);    ## no critic
+our $VERSION = '0.03';
 
 sub delegate {
     my %arg_for = @_;
 
     my ( $package, undef, undef ) = caller;
-    my $delegate = delete $arg_for{to}
-      or croak("You must supply a 'to' argument to delegate()");
-    my $methods = delete $arg_for{methods}
-      or croak("You must supply a 'methods' argument to delegate()");
+    my $delegate    = delete $arg_for{to};
+    my $methods     = delete $arg_for{methods};
     my $args        = delete $arg_for{args};
     my $if_true     = delete $arg_for{if_true};
     my $else_return = delete $arg_for{else_return};
     my $override    = delete $arg_for{override};
+    my $maybe_to    = delete $arg_for{maybe_to};
 
     if ( keys %arg_for ) {
         my $unknown = join ', ' => sort keys %arg_for;
         croak("Unknown keys supplied to delegate(): $unknown");
     }
 
-    $methods = _normalize_methods($methods,$delegate);
+    if ($maybe_to) {
+        if ($delegate) {
+            croak(
+                "You supplied both 'maybe_to' and 'to'. I don't know which to use.");
+        }
+        if ($if_true) {
+            croak(
+"You supplied both 'maybe_to' and 'if_true'. I don't know which to use."
+            );
+        }
+        ( $delegate, $if_true ) = ($maybe_to) x 2;
+    }
+    $delegate or croak("You must supply a 'to' argument to delegate()");
+    $methods  or croak("You must supply a 'methods' argument to delegate()");
+    $methods = _normalize_methods( $methods, $delegate );
 
     if ( defined $else_return && !defined $if_true ) {
         croak(
-            "You must supply a 'if_true' argument if 'else_return' is defined"
-        );
+            "You must supply a 'if_true' argument if 'else_return' is defined");
     }
 
-    if ( ( $if_true || '' ) eq "1" ) {
-        $if_true = $delegate;
-    }
     _assert_valid_method_name($delegate);
     _assert_valid_method_name($if_true) if defined $if_true;
 
@@ -85,8 +94,7 @@ sub delegate {
             no strict 'refs';    ## no critic
             if ( !$override && defined *{"${package}::$method"}{CODE} ) {
                 croak(
-                    "Package '$package' already has a method named '$method'"
-                );
+                    "Package '$package' already has a method named '$method'");
             }
         }
 
@@ -143,7 +151,7 @@ Method::Delegation - Easily delegate methods to another object
 
 =head1 VERSION
 
-Version 0.02
+Version 0.03
 
 =cut
 
@@ -174,6 +182,12 @@ Arguments to C<delegate> are as follows (examples will be after):
 This is the name of the method that, when called, returns the object we
 delegate to.  It is assumed that it will I<always> return an object, unless
 the I<if_true> argument is also supplied.
+
+=item * C<maybe_to> (optional)
+
+If the object you wish to delegate to might not exist, you can use C<maybe_to>
+instead. This is a shorthand for using both C<to> and C<if_true>. Do not
+provide C<to> and C<if_true> if you also provide C<maybe_to>.
 
 =item * C<methods>
 
@@ -294,14 +308,12 @@ that:
         return;
     }
 
-As an optimization for the common case, if you supply the number (or string)
-"1" as the argument to C<if_true>, it will be replaced with the name of the
-delegate method (the C<to> method):
+As an optimization for the common case, you can use C<maybe_to> if the object
+you're delegating to might not exist.
 
     delegate(
-        methods => 'current_ship',
-        to      => 'character_ship',
-        if_true => 1,
+        methods  => 'current_ship',
+        maybe_to => 'character_ship',
     );
 
 Note: the C<if_true> attribute doesn't need to point to the same method, but

@@ -31,9 +31,12 @@ use Method::Delegation;
         args    => 1,
     );
     delegate(
-        methods => { shortcut => 'returns_something' },
-        to      => 'third',
-        if_true => 1,
+        methods  => { shortcut => 'returns_something' },
+        maybe_to => 'third',
+    );
+    delegate(
+        methods  => { maybe_something => 'returns_something' },
+        maybe_to => 'third',
     );
     delegate(
         methods => [qw/this that/],
@@ -41,14 +44,12 @@ use Method::Delegation;
         if_true => 'fourth',
     );
     delegate(
-        methods => 'faily_fail',
-        to      => 'fourth',
-        if_true => 1,
+        methods  => 'faily_fail',
+        maybe_to => 'fourth',
     );
     delegate(
         methods     => [qw/oui non/],
-        to          => 'fifth',
-        if_true     => 1,
+        maybe_to    => 'fifth',
         else_return => 'fail!',
     );
 
@@ -63,8 +64,9 @@ ok !$object->this, '... and methods we cannot delegate return false';
 is $object->non, 'fail!',
   '... and else_return can specify a return value if the method returns false';
 is $object->shortcut, 'something',
-  'Our "if_true => 1" shortcut should work as intended';
+  'Our "maybe_to" shortcut should work as intended';
 ok !$object->faily_fail, '... even if the delegated object does not exist';
+is $object->maybe_something, 'something', 'Using "maybe_to" works as expected';
 
 # exceptions
 
@@ -89,6 +91,11 @@ $delegate{methods} = '111egal method name';
 throws_ok { delegate(%delegate) }
 qr/\QIllegal method name: '111egal method name'/,
   '... and specifying illegal method names should fail';
+
+$delegate{maybe_to} = 'whatever';
+throws_ok { delegate(%delegate) }
+qr/\QYou supplied both 'maybe_to' and 'to'. I don't know which to use./,
+  'Supplying both "to" and "maybe_to" should fail';
 
 done_testing;
 
