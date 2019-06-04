@@ -7,6 +7,7 @@ WriteMakefile(
     'AUTHOR'       => q{Curtis 'Ovid' Poe <ovid@cpan.org>},
     'LICENSE'      => 'artistic_2',
     'VERSION_FROM' => 'lib/Method/Delegation.pm',
+    'ABSTRACT'     => 'lib/Method/Delegation.pm',
     'PREREQ_PM'    => {
         'Test::Most'   => '0.35',
         'Sub::Install' => '0.928',
