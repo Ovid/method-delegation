@@ -1,5 +1,8 @@
 Revision history for Method-Delegation
 
-0.01    Date/time
-        First version, released on an unsuspecting world.
+0.02    June 4, 2019
+        Add 'if_true => 1' shortcut for the common case (suggestion by ilmari)
+
+0.01    June 3, 2019
+        Easy method delegation. First version, github only.
 
