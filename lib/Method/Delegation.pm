@@ -346,8 +346,31 @@ L<https://metacpan.org/release/Method-Delegation>
 
 =back
 
+=head1 SEE ALSO
+
+C<Method::Delegation> was developed for the narrative sci-fi game L<Tau
+Station|https://taustation.space>. We like it because the syntax is simple,
+clear, and intuitive (to us). However, there are a few alternatives on the
+CPAN that you might find useful:
+
+=over 4
+
+=item * L<Class::Delegation|https://metacpan.org/pod/Class::Delegation>
+
+=item * L<Class::Delegation::Simple|https://metacpan.org/pod/Class::Delegation::Simple>
+
+=item * L<Class::Delegate|https://metacpan.org/pod/Class::Delegate>
+
+=item * L<Class::Method::Delegate|https://metacpan.org/pod/Class::Method::Delegate>
+
+=back
 
 =head1 ACKNOWLEDGEMENTS
+
+This code was written to help reduce the complexity of the narrative sci-fi
+adventure, L<Tau Station|https://taustation.space>. As of this writing, it's
+around 1/3 of a million lines of code (counting front-end, back-end, tests,
+etc.), and anything to reduce that complexity is a huge win.
 
 Thanks to L<ilmari|https://twitter.com/TokenScandi/status/1135533624110047234>
 for the C<< if_true => 1 >> shortcut suggestion.

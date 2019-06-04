@@ -203,7 +203,24 @@ You can also look for information at:
 
     [https://metacpan.org/release/Method-Delegation](https://metacpan.org/release/Method-Delegation)
 
+# SEE ALSO
+
+`Method::Delegation` was developed for the narrative sci-fi game [Tau
+Station](https://taustation.space). We like it because the syntax is simple,
+clear, and intuitive (to us). However, there are a few alternatives on the
+CPAN that you might find useful:
+
+- [Class::Delegation](https://metacpan.org/pod/Class::Delegation)
+- [Class::Delegation::Simple](https://metacpan.org/pod/Class::Delegation::Simple)
+- [Class::Delegate](https://metacpan.org/pod/Class::Delegate)
+- [Class::Method::Delegate](https://metacpan.org/pod/Class::Method::Delegate)
+
 # ACKNOWLEDGEMENTS
+
+This code was written to help reduce the complexity of the narrative sci-fi
+adventure, [Tau Station](https://taustation.space). As of this writing, it's
+around 1/3 of a million lines of code (counting front-end, back-end, tests,
+etc.), and anything to reduce that complexity is a huge win.
 
 Thanks to [ilmari](https://twitter.com/TokenScandi/status/1135533624110047234)
 for the `if_true => 1` shortcut suggestion.
