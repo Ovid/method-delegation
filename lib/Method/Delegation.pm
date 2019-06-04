@@ -330,8 +330,7 @@ undef if C<current_weapon> isn't found:
             weapon_damage   => 'damage',
             weapon_accurace => 'accuracy',
         },
-        to          => 'current_weapon',
-        if_true     => 'current_weapon',
+        maybe_to    => 'current_weapon',
         else_return => 0,
     );
 
