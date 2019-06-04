@@ -4,7 +4,7 @@ Method::Delegation - Easily delegate methods to another object
 
 # VERSION
 
-Version 0.01
+Version 0.02
 
 # SYNOPSIS
 
@@ -56,6 +56,9 @@ Arguments to `delegate` are as follows (examples will be after):
     returns false, we return false. Usually this is the same name as the `to`
     argument, meaning if if the method named in `to` does not return an object,
     simply return false instead of attempting to delegate.
+
+    As a convenience, the number (or string) "1" has been special-cased to mean
+    the current delegate method name.
 
 - `else_return` (optional)
 
@@ -144,6 +147,16 @@ that:
         return;
     }
 
+As an optimization for the common case, if you supply the number (or string)
+"1" as the argument to `if_true`, it will be replaced with the name of the
+delegate method (the `to` method):
+
+    delegate(
+        methods => 'current_ship',
+        to      => 'character_ship',
+        if_true => 1,
+    );
+
 Note: the `if_true` attribute doesn't need to point to the same method, but
 usually it does. If it points to another method, it simply checks the truth
 value of the response to determine if the original delegate will be called.
@@ -169,11 +182,10 @@ Curtis "Ovid" Poe, `<curtis.poe at gmail.com>`
 
 # BUGS
 
-Please report any bugs or feature requests to `bug-method-delegation at
-rt.cpan.org`, or through the web interface at
-[https://rt.cpan.org/NoAuth/ReportBug.html?Queue=Method-Delegation](https://rt.cpan.org/NoAuth/ReportBug.html?Queue=Method-Delegation).  I will
-be notified, and then you'll automatically be notified of progress on your bug
-as I make changes.
+Please report any bugs or feature fequests via the Web interface at
+[https://github.com/Ovid/method-delegation/issues](https://github.com/Ovid/method-delegation/issues).  I will be notified, and
+then you'll automatically be notified of progress on your bug as I make
+changes.
 
 # SUPPORT
 
@@ -183,19 +195,18 @@ You can find documentation for this module with the perldoc command.
 
 You can also look for information at:
 
-- RT: CPAN's request tracker (report bugs here)
+- Bug Tracker
 
-    [https://rt.cpan.org/NoAuth/Bugs.html?Dist=Method-Delegation](https://rt.cpan.org/NoAuth/Bugs.html?Dist=Method-Delegation)
-
-- CPAN Ratings
-
-    [https://cpanratings.perl.org/d/Method-Delegation](https://cpanratings.perl.org/d/Method-Delegation)
+    [https://github.com/Ovid/method-delegation/issues](https://github.com/Ovid/method-delegation/issues)
 
 - Search CPAN
 
     [https://metacpan.org/release/Method-Delegation](https://metacpan.org/release/Method-Delegation)
 
 # ACKNOWLEDGEMENTS
+
+Thanks to [ilmari](https://twitter.com/TokenScandi/status/1135533624110047234)
+for the `if_true => 1` shortcut suggestion.
 
 # LICENSE AND COPYRIGHT
 
