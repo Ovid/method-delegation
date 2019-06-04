@@ -22,28 +22,17 @@ sub delegate {
     my $else_return = delete $arg_for{else_return};
     my $override    = delete $arg_for{override};
 
+    if ( keys %arg_for ) {
+        my $unknown = join ', ' => sort keys %arg_for;
+        croak("Unknown keys supplied to delegate(): $unknown");
+    }
+
+    $methods = _normalize_methods($methods,$delegate);
+
     if ( defined $else_return && !defined $if_true ) {
         croak(
             "You must supply a 'if_true' argument if 'else_return' is defined"
         );
-    }
-
-    if ( 'ARRAY' eq ref $methods ) {
-        $methods = { map { $_ => $_ } @$methods };
-    }
-    elsif ( !ref $methods ) {
-        $methods = { $methods => $methods };
-    }
-    elsif ( 'HASH' ne ref $methods ) {
-        croak("I don't know how to delegate to '$delegate' from '$methods'");
-    }
-
-    unless ( keys %$methods ) {
-        croak("You have not provideed any methods to delegate");
-    }
-    if ( keys %arg_for ) {
-        my $unknown = join ', ' => sort keys %arg_for;
-        croak("Unknown keys supplied to delegate(): $unknown");
     }
 
     if ( ( $if_true || '' ) eq "1" ) {
@@ -103,6 +92,25 @@ sub delegate {
 
         _install_delegate( $coderef, $package, $method );
     }
+}
+
+sub _normalize_methods {
+    my ( $methods, $delegate ) = @_;
+
+    if ( 'ARRAY' eq ref $methods ) {
+        $methods = { map { $_ => $_ } @$methods };
+    }
+    elsif ( !ref $methods ) {
+        $methods = { $methods => $methods };
+    }
+    elsif ( 'HASH' ne ref $methods ) {
+        croak("I don't know how to delegate to '$delegate' from '$methods'");
+    }
+
+    unless ( keys %$methods ) {
+        croak("You have not provideed any methods to delegate");
+    }
+    return $methods;
 }
 
 sub _install_delegate {
