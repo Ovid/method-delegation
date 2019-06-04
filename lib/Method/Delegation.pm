@@ -7,6 +7,7 @@ use Carp;
 use Sub::Install;
 use base 'Exporter';
 our @EXPORT = qw(delegate);    ## no critic
+our $VERSION = '0.02';
 
 sub delegate {
     my %arg_for = @_;
@@ -45,6 +46,9 @@ sub delegate {
         croak("Unknown keys supplied to delegate(): $unknown");
     }
 
+    if ( ( $if_true || '' ) eq "1" ) {
+        $if_true = $delegate;
+    }
     _assert_valid_method_name($delegate);
     _assert_valid_method_name($if_true) if defined $if_true;
 
@@ -131,11 +135,9 @@ Method::Delegation - Easily delegate methods to another object
 
 =head1 VERSION
 
-Version 0.01
+Version 0.02
 
 =cut
-
-our $VERSION = '0.01';
 
 =head1 SYNOPSIS
 
@@ -189,6 +191,9 @@ The name of a method to call to see if we can perform the delegation. If it
 returns false, we return false. Usually this is the same name as the C<to>
 argument, meaning if if the method named in C<to> does not return an object,
 simply return false instead of attempting to delegate.
+
+As a convenience, the number (or string) "1" has been special-cased to mean
+the current delegate method name.
 
 =item * C<else_return> (optional)
 
@@ -280,6 +285,16 @@ that:
         }
         return;
     }
+
+As an optimization for the common case, if you supply the number (or string)
+"1" as the argument to C<if_true>, it will be replaced with the name of the
+delegate method (the C<to> method):
+
+    delegate(
+        methods => 'current_ship',
+        to      => 'character_ship',
+        if_true => 1,
+    );
 
 Note: the C<if_true> attribute doesn't need to point to the same method, but
 usually it does. If it points to another method, it simply checks the truth

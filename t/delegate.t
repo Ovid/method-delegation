@@ -31,14 +31,24 @@ use Method::Delegation;
         args    => 1,
     );
     delegate(
+        methods => { shortcut => 'returns_something' },
+        to      => 'third',
+        if_true => 1,
+    );
+    delegate(
         methods => [qw/this that/],
         to      => 'fourth',
         if_true => 'fourth',
     );
     delegate(
+        methods => 'faily_fail',
+        to      => 'fourth',
+        if_true => 1,
+    );
+    delegate(
         methods     => [qw/oui non/],
         to          => 'fifth',
-        if_true     => 'fifth',
+        if_true     => 1,
         else_return => 'fail!',
     );
 
@@ -52,6 +62,9 @@ is $object->reverse('foobar'), 'raboof',
 ok !$object->this, '... and methods we cannot delegate return false';
 is $object->non, 'fail!',
   '... and else_return can specify a return value if the method returns false';
+is $object->shortcut, 'something',
+  'Our "if_true => 1" shortcut should work as intended';
+ok !$object->faily_fail, '... even if the delegated object does not exist';
 
 # exceptions
 
@@ -100,5 +113,6 @@ done_testing;
         my ( $self, $string ) = @_;
         return scalar reverse $string;
     }
-}
 
+    sub returns_something { 'something' }
+}
