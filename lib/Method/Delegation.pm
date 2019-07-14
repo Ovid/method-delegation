@@ -296,14 +296,14 @@ that:
 
     delegate(
         methods => 'current_ship',
-        to      => 'character_ship',
-        if_true => 'character_ship',
+        to      => 'character',
+        if_true => 'character',
     );
     # equivalent to:
     sub current_ship {
         my $self = shift;
-        if ( $self->character_ship ) {
-            return $self->character_ship;
+        if ( $self->character ) {
+            return $self->character->current_ship;
         }
         return;
     }
@@ -313,7 +313,7 @@ you're delegating to might not exist.
 
     delegate(
         methods  => 'current_ship',
-        maybe_to => 'character_ship',
+        maybe_to => 'character',
     );
 
 Note: the C<if_true> attribute doesn't need to point to the same method, but
